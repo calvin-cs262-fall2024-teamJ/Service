@@ -48,11 +48,11 @@ const router = express.Router();
 router.use(express.json());
 
 router.get('/', readHelloMessage);
-router.get('/players', readPlayers);
-router.get('/players/:id', readPlayer);
-router.put('/players/:id', updatePlayer);
-router.post('/players', createPlayer);
-router.delete('/players/:id', deletePlayer);
+router.get('/dungeonmasters', readDMs);
+router.get('/dungeonmasters/:id', readDM);
+router.put('/dungeonmasters/:id', updateDM);
+router.post('/dungeonmasters', createDM);
+router.delete('/dungeonmasters/:id', deleteDM);
 
 app.use(router);
 app.listen(port, () => console.log(`Listening on port ${port}`));
@@ -68,11 +68,11 @@ function returnDataOr404(res, data) {
 }
 
 function readHelloMessage(req, res) {
-  res.send('Hello, CS 262 Monopoly service!');
+  res.send('Hello, JourneySmith WebService!');
 }
 
-function readPlayers(req, res, next) {
-  db.many('SELECT * FROM Player')
+function readDMs(req, res, next) {
+  db.many('SELECT * FROM DungeonMaster')
     .then((data) => {
       res.send(data);
     })
@@ -81,8 +81,8 @@ function readPlayers(req, res, next) {
     });
 }
 
-function readPlayer(req, res, next) {
-  db.oneOrNone('SELECT * FROM Player WHERE id=${id}', req.params)
+function readDM(req, res, next) {
+  db.oneOrNone('SELECT * FROM DungeonMaster WHERE id=${id}', req.params)
     .then((data) => {
       returnDataOr404(res, data);
     })
@@ -91,8 +91,8 @@ function readPlayer(req, res, next) {
     });
 }
 
-function updatePlayer(req, res, next) {
-  db.oneOrNone('UPDATE Player SET email=${body.email}, name=${body.name} WHERE id=${params.id} RETURNING id', req)
+function updateDM(req, res, next) {
+  db.oneOrNone('UPDATE DungeonMaster SET nickname=${body.nickname}, loginID=${body.loginID}, password=${body.password} WHERE id=${params.id} RETURNING id', req)
     .then((data) => {
       returnDataOr404(res, data);
     })
@@ -101,8 +101,8 @@ function updatePlayer(req, res, next) {
     });
 }
 
-function createPlayer(req, res, next) {
-  db.one('INSERT INTO Player(email, name) VALUES (${email}, ${name}) RETURNING id', req.body)
+function createDM(req, res, next) {
+  db.one('INSERT INTO DungeonMaster(nickname, loginID, password) VALUES (${nickname}, ${loginID}, ${password}) RETURNING id', req.body)
     .then((data) => {
       res.send(data);
     })
@@ -111,8 +111,8 @@ function createPlayer(req, res, next) {
     });
 }
 
-function deletePlayer(req, res, next) {
-  db.oneOrNone('DELETE FROM Player WHERE id=${id} RETURNING id', req.params)
+function deleteDM(req, res, next) {
+  db.oneOrNone('DELETE FROM DungeonMaster WHERE id=${id} RETURNING id', req.params)
     .then((data) => {
       returnDataOr404(res, data);
     })
