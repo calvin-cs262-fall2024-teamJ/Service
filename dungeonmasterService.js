@@ -171,7 +171,7 @@ function deleteMap(req, res, next) {
 
 //reads all SQL Note data from given dungeonMaster
 function readNotes(req, res, next){
-  db.any('SELECT * FROM Note, DungeonMaster WHERE DungeonMaster.id=${id};')
+  db.any('SELECT * FROM Note, DungeonMaster WHERE DungeonMaster.id=${id};', req.params)
     .then((data) => {
       res.send(data);
     })
@@ -182,7 +182,7 @@ function readNotes(req, res, next){
 
 //reads Notes content from the same given map id
 function readMapNotes(req, res, next){
-  db.any('SELECT Title, Content FROM Note WHERE WorldMapID=${id};')
+  db.any('SELECT Title, Content FROM Note WHERE WorldMapID=${id};', req.params)
     .then((data) => {
       res.send(data);
     })
@@ -193,7 +193,7 @@ function readMapNotes(req, res, next){
 
 //reads one specific note based off given note id
 function readNote(req, res, next){
-  bd.one('SELECT Title, Content FROM Note WHERE id=${id};')
+  bd.one('SELECT Title, Content FROM Note WHERE id=${id};',req.params)
     .then((data) => {
       res.send(data);
     })
@@ -234,7 +234,7 @@ function updateNote(req, res, next) {
 
 //Pin function
 function readPins(req, res, next) {
-  db.any('SELECT Pin.ID, Pin.NoteID, Pin.x, Pin.y, Pin.iconID FROM Pin, Note WHERE WorldMapID=${id} AND NoteID=Note.ID;')//maybe db.many
+  db.any('SELECT Pin.ID, Pin.NoteID, Pin.x, Pin.y, Pin.iconID FROM Pin, Note WHERE WorldMapID=${id} AND NoteID=Note.ID;', req)//maybe db.many
     .then((data) => {
       res.send(data);
     })
