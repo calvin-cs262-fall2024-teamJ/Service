@@ -1,2 +1,2 @@
-web: node monopolyService.js
+web: node dungeonmasterService.js
 direct: node monopolyDirect.js
