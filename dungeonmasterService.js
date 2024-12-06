@@ -286,3 +286,15 @@ function createPinImage(req, res, next) {
       next(err);
     });
 }
+
+app.get('/notes', async (req, res, next) => {
+  try {
+    console.log('Fetching notes...'); // Debug log
+    const notes = await db.any('SELECT * FROM Note WHERE WorldMapID=${id};', req.params);
+    console.log('Notes fetched:', notes); // Debug log
+    res.send(notes);
+  } catch (err) {
+    console.error('Error fetching notes:', err); // Debug log
+    next(err);
+  }
+});
