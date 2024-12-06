@@ -76,6 +76,7 @@ function readHelloMessage(req, res) {
   res.send('Hello, JourneySmith WebService!');
 }
 
+//dungeon master functions
 function readDMs(req, res, next) {
   db.any('SELECT * FROM DungeonMaster;')//maybe db.many
     .then((data) => {
@@ -171,7 +172,7 @@ function deleteMap(req, res, next) {
 
 //reads all SQL Note data from given dungeonMaster
 function readNotes(req, res, next){
-  db.any('SELECT * FROM Note, DungeonMaster WHERE DungeonMaster.id=${id};', req.params)
+  db.any('SELECT Note.ID, Note.WorldMapID, Note.Content FROM Note, Map WHERE Map.ID=${id} AND Map.ID=Note.WorldID ;', req.params)
     .then((data) => {
       res.send(data);
     })
