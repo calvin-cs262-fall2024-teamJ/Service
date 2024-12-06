@@ -173,7 +173,7 @@ function deleteMap(req, res, next) {
 //reads all SQL Note data from given dungeonMaster
 function readNotes(req, res, next){
   console.log('Accessing /notes');
-  db.any('SELECT Note.ID, Note.WorldMapID, Note.Title, Note.Content FROM Note, Map WHERE Map.ID=1 AND Map.ID=Note.WorldMapID;', req.params)
+  db.any('SELECT * FROM Note WHERE WorldMapID=${id};', req.params)
     .then((data) => {
       res.send(data);
     })
