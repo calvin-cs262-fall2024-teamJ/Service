@@ -172,7 +172,8 @@ function deleteMap(req, res, next) {
 
 //reads all SQL Note data from given dungeonMaster
 function readNotes(req, res, next){
-  db.any('SELECT Note.ID, Note.WorldMapID, Note.Content FROM Note, Map WHERE Map.ID=${id} AND Map.ID=Note.WorldID ;', req.params)
+  console.log('Accessing /notes');
+  db.any('SELECT Note.ID, Note.WorldMapID, Note.Title, Note.Content FROM Note, Map WHERE Map.ID=1 AND Map.ID=Note.WorldMapID;', req.params)
     .then((data) => {
       res.send(data);
     })
@@ -194,7 +195,8 @@ function readMapNotes(req, res, next){
 
 //reads one specific note based off given note id
 function readNote(req, res, next){
-  bd.one('SELECT Title, Content FROM Note WHERE id=${id};',req.params)
+  console.log('Accessing /note/:id');
+  db.one('SELECT ID, Content FROM Note WHERE id=${id};',req.params)
     .then((data) => {
       res.send(data);
     })
@@ -204,6 +206,7 @@ function readNote(req, res, next){
 }
 
 function createNote(req, res, next) {
+  console.log('Accessing /notes creat Note');
   db.one('INSERT INTO Note(WorldMapID, Title, Content) VALUES (${WorldMapID}, ${MapImage}, ${MapName}) RETURNING id;', req.body)
     .then((data) => {
       res.send(data);
