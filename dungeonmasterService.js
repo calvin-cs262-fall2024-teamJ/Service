@@ -98,7 +98,7 @@ function readDM(req, res, next) {
 }
 
 function updateDM(req, res, next) {
-  db.oneOrNone('UPDATE DungeonMaster SET nickname=${body.nickname}, loginID=${body.loginID}, password=${body.password} WHERE id=${params.id} RETURNING id;', req)
+  db.oneOrNone('UPDATE DungeonMaster SET nickname=${body.nickname}, loginID=${body.loginid}, password=${body.password} WHERE id=${params.id} RETURNING id;', req)
     .then((data) => {
       returnDataOr404(res, data);
     })
@@ -108,7 +108,7 @@ function updateDM(req, res, next) {
 }
 
 function createDM(req, res, next) {
-  db.one('INSERT INTO DungeonMaster(nickname, loginID, password) VALUES (${nickname}, ${loginID}, ${password}) RETURNING id;', req.body)
+  db.one('INSERT INTO DungeonMaster(nickname, loginID, password) VALUES (${nickname}, ${loginid}, ${password}) RETURNING id;', req.body)
     .then((data) => {
       res.send(data);
     })
