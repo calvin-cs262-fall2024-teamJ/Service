@@ -298,3 +298,21 @@ app.get('/notes', async (req, res, next) => {
     next(err);
   }
 });
+
+router.get('/notes/:id', async (req, res, next) => {
+  try {
+    console.log('Fetching notes for WorldMapID:', req.params.id); // Debug log
+    const notes = await db.any('SELECT * FROM Note WHERE WorldMapID=${id};', req.params);
+    console.log('Database query executed successfully'); // Debug log
+    console.log('Notes fetched:', notes); // Debug log
+    if (notes.length === 0) {
+      console.log('No notes found for the given WorldMapID'); // Debug log
+    }
+    res.send(notes);
+  } catch (err) {
+    console.error('Error fetching notes for WorldMapID:', req.params.id, err); // Debug log
+    res.status(500).send('Error fetching notes');
+  }
+});
+
+
