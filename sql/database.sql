@@ -1,61 +1,53 @@
-
---DROP TABLE IF EXISTS NULL;
+-- Drop existing tables if they exist
 DROP TABLE IF EXISTS Pin;
 DROP TABLE IF EXISTS Note;
 DROP TABLE IF EXISTS Map;
 DROP TABLE IF EXISTS DungeonMaster;
 
-CREATE TABLE DungeonMaster(--main user
-    ID integer Primary Key,
-    nickname char(20) NOT NULL,
-    loginid integer NOT NULL,
-    password char(30) NOT NULL -- hopefuly will be encrypted
+-- Create DungeonMaster table
+CREATE TABLE DungeonMaster (
+    ID SERIAL PRIMARY KEY,
+    nickname VARCHAR(20) NOT NULL,
+    loginid INTEGER NOT NULL,
+    password VARCHAR(30) NOT NULL
 );
 
-CREATE TABLE Map(
-    ID integer Primary Key,
-    DungeonMasterID integer REFERENCES DungeonMaster(ID) NOT NULL,
-    MapImage OID,--MAY NEED to be changed to hold file
-    MapName char(20) NOT NULL,
-    supermapID integer REFERENCES Map(ID) -- should be null for first map
+-- Create Note table
+CREATE TABLE Note (
+    ID SERIAL PRIMARY KEY,
+    WorldMapID INTEGER,
+    Title VARCHAR(50),
+    Content TEXT
 );
 
-CREATE TABLE Note(
-    ID integer Primary Key,
-    WorldMapID integer REFERENCES Map(ID),
-    Title char(20),
-    Content text
+-- Create Map table
+CREATE TABLE Map (
+    ID SERIAL PRIMARY KEY,
+    DungeonMasterID INTEGER,
+    MapImage BYTEA,
+    MapName VARCHAR(50),
+    supermapID INTEGER
 );
 
-CREATE TABLE Pin(
-    ID integer Primary Key,
-    NoteID integer REFERENCES Note(ID),--this needs to change probably switched
-    x integer NOT NULL,
-    y integer NOT NULL,
-    --color char(20),
-    iconID integer REFERENCES PinImage(ID) -- also needs to change for image
+-- Create Pin table
+CREATE TABLE Pin (
+    ID SERIAL PRIMARY KEY,
+    NoteID INTEGER,
+    x INTEGER,
+    y INTEGER,
+    iconID INTEGER,
+    color VARCHAR(20)
 );
 
-CREATE TABLE PinImage(
-    ID integer Primary Key,
-    icon OID
-)
-GRANT SELECT ON DungeonMaster TO PUBLIC;
-GRANT SELECT ON Map TO PUBLIC;
-GRANT SELECT ON Note TO PUBLIC;
-GRANT SELECT ON Pin TO PUBLIC;
+-- Grant SELECT on tables to public
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO PUBLIC;
 
+-- Insert example data
+INSERT INTO DungeonMaster (nickname, loginid, password) VALUES ('dm1', 1, 'password1');
+INSERT INTO DungeonMaster (nickname, loginid, password) VALUES ('dm2', 2, 'password2');
 
--- --TESTING
-INSERT INTO DungeonMaster VALUES (1,'THE LICH',1,'hello world');
-INSERT INTO DungeonMaster VALUES (2,'NERUL',2,'this password');
+INSERT INTO Map (DungeonMasterID, MapImage, MapName) VALUES (1, decode('42696e6172792044617461','hex'), 'Rivendel');
+INSERT INTO Map (DungeonMasterID, MapImage, MapName) VALUES (2, decode('42696e6172792044617461','hex'), 'Mordor');
 
-INSERT INTO Map(ID, DungeonMasterID, MapImage, MapName,supermapID) VALUES (1,1,'ok','Rivendel',NULL);
-INSERT INTO Map VALUES (1,1,'ok','Rivendel',NULL);
-
-INSERT INTO Note VALUES (1,1,'silk song will come out soon, I can feel it');
-INSERT INTO Pin VALUES (1,1,3,4,'blue','pentagon');
-
--- SELECT * FROM DungeonMaster;
--- SELECT * FROM Note;
--- SELECT * FROM Pin;
+INSERT INTO Pin (NoteID, x, y, iconID, color) VALUES (1, 3, 4, 1, 'blue');
+INSERT INTO Pin (NoteID, x, y, iconID, color) VALUES (2, 6, 7, 2, 'red');
