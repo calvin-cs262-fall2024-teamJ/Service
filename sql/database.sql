@@ -8,7 +8,7 @@ DROP TABLE IF EXISTS DungeonMaster;
 CREATE TABLE DungeonMaster(--main user
     ID integer Primary Key,
     nickname char(20) NOT NULL,
-    loginID integer NOT NULL,
+    loginid integer NOT NULL,
     password char(30) NOT NULL -- hopefuly will be encrypted
 );
 
