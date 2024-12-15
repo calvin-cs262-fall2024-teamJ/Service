@@ -49,5 +49,8 @@ INSERT INTO DungeonMaster (nickname, loginid, password) VALUES ('dm2', 2, 'passw
 INSERT INTO Map (DungeonMasterID, MapImage, MapName) VALUES (1, decode('42696e6172792044617461','hex'), 'Rivendel');
 INSERT INTO Map (DungeonMasterID, MapImage, MapName) VALUES (2, decode('42696e6172792044617461','hex'), 'Mordor');
 
+INSERT INTO Note (WorldMapID, Title, Content) VALUES (1, 'Note1', 'Content for Note 1');
+INSERT INTO Note (WorldMapID, Title, Content) VALUES (2, 'Note2', 'Content for Note 2');
+
 INSERT INTO Pin (NoteID, x, y, iconID, color) VALUES (1, 3, 4, 1, 'blue');
 INSERT INTO Pin (NoteID, x, y, iconID, color) VALUES (2, 6, 7, 2, 'red');
