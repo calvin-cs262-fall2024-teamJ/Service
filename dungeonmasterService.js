@@ -122,12 +122,17 @@ router.put('/notes/:id', updateNote);
 router.delete('/notes/:id', deleteNote);
 
 function readNotes(req, res, next) {
-  db.any('SELECT * FROM Note WHERE WorldMapID=${id};', req.params)
+  const worldMapID = req.params.id;
+  console.log(`Fetching notes for WorldMapID: ${worldMapID}`); // Debug log
+  
+  db.any('SELECT * FROM Note WHERE WorldMapID=${id};', { id: worldMapID })
     .then((data) => {
+      console.log('Notes fetched:', data); // Debug log
       res.send(data);
     })
     .catch((err) => {
-      next(err);
+      console.error(`Error fetching notes for WorldMapID: ${worldMapID}`, err); // Debug log
+      res.status(500).send('Error fetching notes');
     });
 }
 
