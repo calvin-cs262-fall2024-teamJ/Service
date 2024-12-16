@@ -1,3 +1,6 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
 name: Build and deploy Node.js app to Azure Web App - journeysmithwebbapp
 
 on:
@@ -40,7 +43,7 @@ jobs:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     permissions:
-      id-token: write  # This is required for requesting the JWT
+      id-token: write #This is required for requesting the JWT
 
     steps:
       - name: Download artifact from build job
@@ -48,18 +51,9 @@ jobs:
         with:
           name: node-app
 
-      - name: Log before unzipping artifact
-        run: echo "Starting to unzip artifact..."
-
       - name: Unzip artifact for deployment
         run: unzip release.zip
-
-      - name: Log after unzipping artifact
-        run: echo "Finished unzipping artifact."
-
-      - name: Wait for SCM container to stabilize
-        run: sleep 90  # Increase delay to 90 seconds
-
+      
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -67,16 +61,11 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_343587C9CC2740AD905AF593C780B6C7 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_8765781E41DB4ED58B1AB1E163176DDE }}
 
-      - name: Restart Azure Web App
-        run: az webapp restart --name journeysmithwebbapp --resource-group journeysmithdata
-
-      - name: Wait after restart
-        run: sleep 60  # Add another delay after restart
-
-      - name: Deploy to Azure Web App
+      - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'journeysmithwebbapp'
-          package: release.zip
-          clean: true
+          slot-name: 'Production'
+          package: .
+          
