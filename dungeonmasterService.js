@@ -18,7 +18,7 @@ const db = pgp({
 const express = require('express');
 
 const app = express();
-const port = process.env.PORT || 5432;
+const port = process.env.PORT || 8080;
 const router = express.Router();
 router.use(express.json());
 
