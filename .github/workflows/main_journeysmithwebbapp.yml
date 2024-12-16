@@ -48,8 +48,14 @@ jobs:
         with:
           name: node-app
 
+      - name: Log before unzipping artifact
+        run: echo "Starting to unzip artifact..."
+
       - name: Unzip artifact for deployment
         run: unzip release.zip
+
+      - name: Log after unzipping artifact
+        run: echo "Finished unzipping artifact."
 
       - name: Login to Azure
         uses: azure/login@v2
@@ -59,10 +65,13 @@ jobs:
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_8765781E41DB4ED58B1AB1E163176DDE }}
 
       - name: Wait for SCM container to stabilize
-        run: sleep 10
+        run: sleep 90  # Increase delay to 90 seconds
 
       - name: Restart Azure Web App
         run: az webapp restart --name journeysmithwebbapp --resource-group journeysmithdata
+
+      - name: Wait after restart
+        run: sleep 60  # Add another delay after restart
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp

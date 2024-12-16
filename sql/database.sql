@@ -1,4 +1,4 @@
--- Drop existing tables if they exist
+-- Drop tables if they exist
 DROP TABLE IF EXISTS Pin;
 DROP TABLE IF EXISTS Note;
 DROP TABLE IF EXISTS Map;
@@ -15,7 +15,7 @@ CREATE TABLE DungeonMaster (
 -- Create Note table
 CREATE TABLE Note (
     ID SERIAL PRIMARY KEY,
-    WorldMapID INTEGER,
+    WorldMapID INTEGER REFERENCES Map(ID) ON DELETE SET NULL,
     Title VARCHAR(50),
     Content TEXT
 );
@@ -23,16 +23,16 @@ CREATE TABLE Note (
 -- Create Map table
 CREATE TABLE Map (
     ID SERIAL PRIMARY KEY,
-    DungeonMasterID INTEGER,
+    DungeonMasterID INTEGER REFERENCES DungeonMaster(ID) ON DELETE CASCADE,
     MapImage BYTEA,
     MapName VARCHAR(50),
-    supermapID INTEGER
+    supermapID INTEGER REFERENCES Map(ID) ON DELETE SET NULL
 );
 
 -- Create Pin table
 CREATE TABLE Pin (
     ID SERIAL PRIMARY KEY,
-    NoteID INTEGER,
+    NoteID INTEGER REFERENCES Note(ID) ON DELETE CASCADE,
     x INTEGER,
     y INTEGER,
     iconID INTEGER,
@@ -46,8 +46,8 @@ GRANT SELECT ON ALL TABLES IN SCHEMA public TO PUBLIC;
 INSERT INTO DungeonMaster (nickname, loginid, password) VALUES ('dm1', 1, 'password1');
 INSERT INTO DungeonMaster (nickname, loginid, password) VALUES ('dm2', 2, 'password2');
 
-INSERT INTO Map (DungeonMasterID, MapImage, MapName) VALUES (1, decode('42696e6172792044617461','hex'), 'Rivendel');
-INSERT INTO Map (DungeonMasterID, MapImage, MapName) VALUES (2, decode('42696e6172792044617461','hex'), 'Mordor');
+INSERT INTO Map (DungeonMasterID, MapImage, MapName) VALUES (1, decode('42696e6172792044617461', 'hex'), 'Rivendel');
+INSERT INTO Map (DungeonMasterID, MapImage, MapName) VALUES (2, decode('42696e6172792044617461', 'hex'), 'Mordor');
 
 INSERT INTO Note (WorldMapID, Title, Content) VALUES (1, 'Note1', 'Content for Note 1');
 INSERT INTO Note (WorldMapID, Title, Content) VALUES (2, 'Note2', 'Content for Note 2');
