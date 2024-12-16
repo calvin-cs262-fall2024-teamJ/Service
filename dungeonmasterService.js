@@ -1,5 +1,4 @@
 const pgp = require('pg-promise')();
-
 const db = pgp({
   host: process.env.DB_SERVER,
   port: process.env.DB_PORT,
@@ -8,18 +7,18 @@ const db = pgp({
   password: process.env.DB_PASSWORD,
   ssl: { rejectUnauthorized: false },
 });
-
 const express = require('express');
 const app = express();
 const port = process.env.PORT || 8080;
 const router = express.Router();
 router.use(express.json());
 
-// Logging
+// Logging environment variables
 console.log('DB_SERVER:', process.env.DB_SERVER);
 console.log('DB_PORT:', process.env.DB_PORT);
 console.log('DB_DATABASE:', process.env.DB_DATABASE);
 console.log('DB_USER:', process.env.DB_USER);
+console.log('DB_PASSWORD:', process.env.DB_PASSWORD);
 
 // DungeonMaster functions
 router.get('/dungeonmasters', readDMs);
@@ -33,6 +32,7 @@ function readDMs(req, res, next) {
       res.send(data);
     })
     .catch((err) => {
+      console.error('Error fetching DungeonMasters:', err);
       next(err);
     });
 }
@@ -43,6 +43,7 @@ function readDM(req, res, next) {
       returnDataOr404(res, data);
     })
     .catch((err) => {
+      console.error('Error fetching DungeonMaster:', err);
       next(err);
     });
 }
@@ -53,6 +54,7 @@ function updateDM(req, res, next) {
       returnDataOr404(res, data);
     })
     .catch((err) => {
+      console.error('Error updating DungeonMaster:', err);
       next(err);
     });
 }
@@ -63,6 +65,7 @@ function createDM(req, res, next) {
       res.send(data);
     })
     .catch((err) => {
+      console.error('Error creating DungeonMaster:', err);
       next(err);
     });
 }
@@ -79,6 +82,7 @@ function readMaps(req, res, next) {
       res.send(data);
     })
     .catch((err) => {
+      console.error('Error fetching maps:', err);
       next(err);
     });
 }
@@ -89,6 +93,7 @@ function readMapImage(req, res, next) {
       res.send(data);
     })
     .catch((err) => {
+      console.error('Error fetching map image:', err);
       next(err);
     });
 }
@@ -99,6 +104,7 @@ function createMap(req, res, next) {
       res.send(data);
     })
     .catch((err) => {
+      console.error('Error creating map:', err);
       next(err);
     });
 }
@@ -109,6 +115,7 @@ function deleteMap(req, res, next) {
       returnDataOr404(res, data);
     })
     .catch((err) => {
+      console.error('Error deleting map:', err);
       next(err);
     });
 }
@@ -123,15 +130,15 @@ router.delete('/notes/:id', deleteNote);
 
 function readNotes(req, res, next) {
   const worldMapID = req.params.id;
-  console.log(`Fetching notes for WorldMapID: ${worldMapID}`); // Debug log
-  
+  console.log(`Fetching notes for WorldMapID: ${worldMapID}`);
+
   db.any('SELECT * FROM Note WHERE WorldMapID=${id};', { id: worldMapID })
     .then((data) => {
-      console.log('Notes fetched:', data); // Debug log
+      console.log('Notes fetched:', data);
       res.send(data);
     })
     .catch((err) => {
-      console.error(`Error fetching notes for WorldMapID: ${worldMapID}`, err); // Debug log
+      console.error(`Error fetching notes for WorldMapID: ${worldMapID}`, err);
       res.status(500).send('Error fetching notes');
     });
 }
@@ -142,6 +149,7 @@ function readMapNotes(req, res, next) {
       res.send(data);
     })
     .catch((err) => {
+      console.error('Error fetching map notes:', err);
       next(err);
     });
 }
@@ -152,6 +160,7 @@ function readNote(req, res, next) {
       res.send(data);
     })
     .catch((err) => {
+      console.error('Error fetching note:', err);
       next(err);
     });
 }
@@ -162,6 +171,7 @@ function createNote(req, res, next) {
       res.send(data);
     })
     .catch((err) => {
+      console.error('Error creating note:', err);
       next(err);
     });
 }
@@ -172,6 +182,7 @@ function deleteNote(req, res, next) {
       returnDataOr404(res, data);
     })
     .catch((err) => {
+      console.error('Error deleting note:', err);
       next(err);
     });
 }
@@ -182,6 +193,7 @@ function updateNote(req, res, next) {
       returnDataOr404(res, data);
     })
     .catch((err) => {
+      console.error('Error updating note:', err);
       next(err);
     });
 }
@@ -199,6 +211,7 @@ function readPins(req, res, next) {
       res.send(data);
     })
     .catch((err) => {
+      console.error('Error reading pins:', err);
       next(err);
     });
 }
@@ -209,6 +222,7 @@ function updatePin(req, res, next) {
       returnDataOr404(res, data);
     })
     .catch((err) => {
+      console.error('Error updating pin:', err);
       next(err);
     });
 }
@@ -219,6 +233,7 @@ function createPin(req, res, next) {
       res.send(data);
     })
     .catch((err) => {
+      console.error('Error creating pin:', err);
       next(err);
     });
 }
@@ -229,6 +244,7 @@ function deletePin(req, res, next) {
       returnDataOr404(res, data);
     })
     .catch((err) => {
+      console.error('Error deleting pin:', err);
       next(err);
     });
 }
@@ -239,6 +255,7 @@ function createPinImage(req, res, next) {
       res.send(data);
     })
     .catch((err) => {
+      console.error('Error creating pin image:', err);
       next(err);
     });
 }
