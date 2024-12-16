@@ -57,15 +57,15 @@ jobs:
       - name: Log after unzipping artifact
         run: echo "Finished unzipping artifact."
 
+      - name: Wait for SCM container to stabilize
+        run: sleep 90  # Increase delay to 90 seconds
+
       - name: Login to Azure
         uses: azure/login@v2
         with:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_9F8D18302AA540D1A64CAE858924EB23 }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_343587C9CC2740AD905AF593C780B6C7 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_8765781E41DB4ED58B1AB1E163176DDE }}
-
-      - name: Wait for SCM container to stabilize
-        run: sleep 90  # Increase delay to 90 seconds
 
       - name: Restart Azure Web App
         run: az webapp restart --name journeysmithwebbapp --resource-group journeysmithdata
