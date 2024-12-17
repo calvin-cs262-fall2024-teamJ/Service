@@ -2,18 +2,19 @@
   "name": "journeysmithwebbapp",
   "version": "1.0.0",
   "description": "CS 262 Webservice",
-  "main": "monopolyService.js",
+  "main": "dungeonmasterService.js",
   "author": "kvlinden",
   "license": "ISC",
   "engines": {
     "node": "18.x"
   },
   "scripts": {
-    "start": "node monopolyService.js",
+    "start": "node dungeonmasterService.js",
     "start-direct": "node monopolyDirect.js",
     "lint": "eslint ."
   },
   "dependencies": {
+    "dotenv": "^16.4.7",
     "express": "^4.17.1",
     "pg-promise": "^10.12.1"
   },

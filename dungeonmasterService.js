@@ -1,32 +1,29 @@
-
-
-// Set up the database connection.
-
 const pgp = require('pg-promise')();
-
 const db = pgp({
   host: process.env.DB_SERVER,
   port: process.env.DB_PORT,
   database: process.env.DB_DATABASE,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
-  ssl: {rejectUnauthorized: false},
+  ssl: { rejectUnauthorized: false },
 });
 
-// Configure the server and its routes.
+db.connect()
+  .then(obj => {
+    obj.done(); // success, release connection
+    console.log('Database connection successful');
+  })
+  .catch(error => {
+    console.error('ERROR connecting to database:', error.message || error);
+  });
 
 const express = require('express');
-
 const app = express();
 const port = process.env.PORT || 8080;
 const router = express.Router();
-router.use(express.json());
 
-//logging
-console.log('DB_SERVER:', process.env.DB_SERVER);
-console.log('DB_PORT:', process.env.DB_PORT);
-console.log('DB_DATABASE:', process.env.DB_DATABASE);
-console.log('DB_USER:', process.env.DB_USER);
+app.use(express.json());
+router.use(express.json());
 
 //dms
 router.get('/', readHelloMessage);
@@ -37,26 +34,23 @@ router.post('/dungeonmasters', createDM);
 
 //maps
 router.get('/maps', readMaps);
-router.get('/maps/image/:id', readMapImage)
-// router.put('/maps/:id', updateMap);
+router.get('/maps/image/:id', readMapImage);
 router.post('/maps', createMap);
 router.delete('/maps/:id', deleteMap);
 
-// //note
+//notes
 router.get('/notes', readNotes);
 router.get('/notes/:id', readNote);
 router.put('/notes/:id', updateNote);
 router.post('/notes', createNote);
 router.delete('/notes/:id', deleteNote);
-router.get('/notes/map/:id', readMapNotes)
+router.get('/notes/map/:id', readMapNotes);
 
-// //pin
-router.get('/pins/:id', readPins);//may need to change
-// router.get('/pins/:id', readPin);
+//pins
+router.get('/pins/:id', readPins);
 router.put('/pins/:id', updatePin);
 router.post('/pins', createPin);
 router.delete('/pins/:id', deletePin);
-//pin image
 router.post('/pins/images', createPinImage);
 
 app.use(router);
@@ -78,7 +72,7 @@ function readHelloMessage(req, res) {
 
 //dungeon master functions
 function readDMs(req, res, next) {
-  db.any('SELECT * FROM DungeonMaster;')//maybe db.many
+  db.any('SELECT * FROM DungeonMaster;')
     .then((data) => {
       res.send(data);
     })
@@ -149,7 +143,7 @@ function readMapImage(req, res, next){
 }
 
 function createMap(req, res, next) {
-  db.one('INSERT INTO Map(DungeonMasterID, MapImage, MapName) VALUES (${DungeonMaster}, ${MapImage}, ${MapName}) RETURNING id;', req.body)
+  db.one('INSERT INTO Map(DungeonMasterID, MapImage, MapName) VALUES (${DungeonMasterID}, ${MapImage}, ${MapName}) RETURNING id;', req.body)
     .then((data) => {
       res.send(data);
     })
@@ -173,7 +167,7 @@ function deleteMap(req, res, next) {
 //reads all SQL Note data from given dungeonMaster
 function readNotes(req, res, next){
   console.log('Accessing /notes');
-  db.any('SELECT * FROM Note WHERE WorldMapID=${id};', req.params)
+  db.any('SELECT * FROM Note;', req.params)
     .then((data) => {
       res.send(data);
     })
@@ -196,7 +190,7 @@ function readMapNotes(req, res, next){
 //reads one specific note based off given note id
 function readNote(req, res, next){
   console.log('Accessing /note/:id');
-  db.one('SELECT ID, Content FROM Note WHERE id=${id};',req.params)
+  db.one('SELECT ID, Content FROM Note WHERE id=${id};', req.params)
     .then((data) => {
       res.send(data);
     })
@@ -206,8 +200,8 @@ function readNote(req, res, next){
 }
 
 function createNote(req, res, next) {
-  console.log('Accessing /notes creat Note');
-  db.one('INSERT INTO Note(WorldMapID, Title, Content) VALUES (${WorldMapID}, ${MapImage}, ${MapName}) RETURNING id;', req.body)
+  console.log('Accessing /notes create Note');
+  db.one('INSERT INTO Note(WorldMapID, Title, Content) VALUES (${WorldMapID}, ${Title}, ${Content}) RETURNING id;', req.body)
     .then((data) => {
       res.send(data);
     })
@@ -238,7 +232,7 @@ function updateNote(req, res, next) {
 
 //Pin function
 function readPins(req, res, next) {
-  db.any('SELECT Pin.ID, Pin.NoteID, Pin.x, Pin.y, Pin.iconID FROM Pin, Note WHERE WorldMapID=${id} AND NoteID=Note.ID;', req)//maybe db.many
+  db.any('SELECT Pin.ID, Pin.NoteID, Pin.x, Pin.y, Pin.iconID FROM Pin, Note WHERE WorldMapID=${id} AND NoteID=Note.ID;', req)
     .then((data) => {
       res.send(data);
     })
@@ -287,6 +281,12 @@ function createPinImage(req, res, next) {
     });
 }
 
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error('Unhandled error:', err.stack);
+  res.status(500).send('Something went wrong!');
+});
+
 app.get('/notes', async (req, res, next) => {
   try {
     console.log('Fetching notes...'); // Debug log
@@ -298,3 +298,5 @@ app.get('/notes', async (req, res, next) => {
     next(err);
   }
 });
+
+
