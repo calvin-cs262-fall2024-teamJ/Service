@@ -9,7 +9,7 @@ DROP TABLE IF EXISTS PinImage;
 CREATE TABLE DungeonMaster (
     ID SERIAL PRIMARY KEY,
     nickname VARCHAR(20) NOT NULL,
-    loginid INTEGER NOT NULL,
+    loginid VARCHAR(255) NOT NULL,
     password VARCHAR(30) NOT NULL
 );
 
@@ -49,6 +49,7 @@ CREATE TABLE Pin (
 -- Insert example data into DungeonMaster table
 INSERT INTO DungeonMaster (nickname, loginid, password) VALUES ('THE LICH', 1, 'hello world');
 INSERT INTO DungeonMaster (nickname, loginid, password) VALUES ('NERUL', 2, 'this password');
+INSERT INTO DungeonMaster (nickname, loginid, password) VALUES ('TestUser', 'test@example.com', 'password');
 
 -- Insert example data into Map table
 INSERT INTO Map (DungeonMasterID, MapImage, MapName, supermapID) VALUES (1, decode('42696e6172792044617461', 'hex'), 'Rivendel', NULL);
