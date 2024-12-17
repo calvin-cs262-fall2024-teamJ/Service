@@ -1,4 +1,4 @@
-dconst cors = require('cors');  // Make sure cors is imported here
+const cors = require('cors');  // Make sure cors is imported here
 const pgp = require('pg-promise')();
 const db = pgp({
   host: process.env.DB_SERVER,
