@@ -96,7 +96,7 @@ router.post('/dungeonmasters', createDM);
 
 //maps
 router.get('/maps', readMaps);
-router.get('/mapdata/:id' readDMMaps);
+router.get('/mapdata/:id', readDMMaps);
 router.get('/maps/image/:id', readMapImage);
 router.post('/maps', createMap);
 router.delete('/maps/:id', deleteMap);
