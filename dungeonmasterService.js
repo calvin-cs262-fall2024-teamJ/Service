@@ -1,4 +1,4 @@
-const cors = require('cors');  // Make sure cors is imported here
+dconst cors = require('cors');  // Make sure cors is imported here
 const pgp = require('pg-promise')();
 const db = pgp({
   host: process.env.DB_SERVER,
@@ -24,7 +24,7 @@ const port = process.env.PORT || 8080;
 const router = express.Router();
 
 app.use(cors({
-  origin: 'http://localhost:8081',  // Ensure this matches your client URL
+  origin: 'journeysmithwebbapp-f5azf8edebaqarcc.canadacentral-01.azurewebsites.net',  // Ensure this matches your client URL
 }));
 app.use(express.json());
 app.use(router); // Make sure to use the router after applying CORS and express.json()
