@@ -96,6 +96,7 @@ router.post('/dungeonmasters', createDM);
 
 //maps
 router.get('/maps', readMaps);
+router.get('/mapdata/:id' readDMMaps);
 router.get('/maps/image/:id', readMapImage);
 router.post('/maps', createMap);
 router.delete('/maps/:id', deleteMap);
@@ -186,6 +187,16 @@ function createDM(req, res, next) {
 //Map functions
 function readMaps(req, res, next){
   db.any('SELECT * FROM Map;')
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
+function readDMMaps(req, res, next){
+  db.one('SELECT * FROM Map WHERE DungeonMasterID=${id};', req.params)
     .then((data) => {
       res.send(data);
     })
