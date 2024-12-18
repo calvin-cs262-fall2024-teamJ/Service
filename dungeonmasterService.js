@@ -1,3 +1,14 @@
+/**
+ * This module implements a REST-inspired webservice for the Monopoly DB.
+ * The database is hosted on AzureWebServer.
+ *
+ * Currently, the service supports the DungeonMaster, Map, Note, and Pin table.
+ * connection strings and the server mode are
+ * set in environment variables. See the DB_* variables used by pg-promise. And
+ * setting NODE_ENV to production will cause ExpressJS to serve up uninformative
+ * server error responses for all errors.
+ * 
+ */
 const cors = require('cors');  // Make sure cors is imported here
 const pgp = require('pg-promise')();
 const db = pgp({
